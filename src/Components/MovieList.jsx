@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Fire from "../assets/fire.svg";
 
 import MovieCard from './MovieCard';
+import { data } from 'autoprefixer';
 const MovieList = () => {
+    useEffect(() => {
+        fetch('https://api.themoviedb.org/3/movie/popular?api_key=c7548debf7c3c70ef38c0a1041ef40c5')
+            .then(res => res.json())
+            .then((data) => console.log(data))
+    }, [])
     return (
         <>
             <header className='flex px-5'>
