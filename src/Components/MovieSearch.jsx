@@ -3,6 +3,7 @@ import NavComponent from './NavComponent'
 import MovieList from './MovieList'
 const MovieSearch = () => {
     const [linkname, setLinkname] = useState('popular');
+
     // console.log(linkname)
     return (
         <div className='bg-black min-h-screen text-white'>
