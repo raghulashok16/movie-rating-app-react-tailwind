@@ -10,7 +10,7 @@ const MovieList = ({ linkname }) => {
     const [sort, useSort] = useState({
         by: 'default',
         order: 'asc',
-    })
+    });
 
     useEffect(() => { fetchMovies() }, [linkname]);
     useEffect(() => {
@@ -38,17 +38,17 @@ const MovieList = ({ linkname }) => {
             setFilteredMovies(movies);
             setRating(0);
         }
-    }
+    };
 
     const handleSort = (e) => {
         const { name, value } = e.target;
         useSort(pre => ({ ...pre, [name]: value }));
-    }
+    };
     const currentTitle = {
         popular: 'Popular',
         top_rated: 'Top Rated',
         now_playing: 'Now Playing',
-    }
+    };
 
     return (
         <>
