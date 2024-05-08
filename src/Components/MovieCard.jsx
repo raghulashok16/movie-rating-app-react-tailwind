@@ -7,7 +7,7 @@ const MovieCard = ({ movie }) => {
             <div className='relative group'>
                 <img src={`https://image.tmdb.org/t/p/w185${poster_path}`} alt="" />
                 <div className='absolute bottom-0 p-2 group-hover:bg-gradient-to-t from-black from-40% ... opacity-0 group-hover:opacity-100 duration-200 '>
-                    <h3 className='text-xs font-extrabold text-yellow-300'>{title}</h3>
+                    <h3 className='text-xs  font-extrabold text-yellow-300'>{title}</h3>
                     <div className='flex flex-row justify-between'>
                         <p className='text-ssss text-yellow-300'>{release_date}</p>
                         <p className='text-ssss text-yellow-300'>{vote_average.toFixed(1)}</p>

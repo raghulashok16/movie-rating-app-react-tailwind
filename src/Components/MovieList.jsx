@@ -3,8 +3,7 @@ import _ from 'lodash';
 import Fire from "../assets/fire.svg";
 
 import MovieCard from './MovieCard';
-import { data } from 'autoprefixer';
-const MovieList = () => {
+const MovieList = ({ linkname }) => {
     const [movies, setMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
     const [rating, setRating] = useState(0);
@@ -12,8 +11,8 @@ const MovieList = () => {
         by: 'default',
         order: 'asc',
     })
-    console.log(sort);
-    useEffect(() => { fetchMovies() }, []);
+
+    useEffect(() => { fetchMovies() }, [linkname]);
     useEffect(() => {
         if (sort.by != 'default') {
             const sortedMovie = _.orderBy(filteredMovies, [sort.by], [sort.order]);
@@ -24,7 +23,7 @@ const MovieList = () => {
     }, [sort]);
 
     const fetchMovies = async () => {
-        const response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=c7548debf7c3c70ef38c0a1041ef40c5');
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${linkname}?api_key=c7548debf7c3c70ef38c0a1041ef40c5`);
         const data = await response.json();
         setMovies(data.results);
         setFilteredMovies(data.results);
@@ -45,11 +44,16 @@ const MovieList = () => {
         const { name, value } = e.target;
         useSort(pre => ({ ...pre, [name]: value }));
     }
+    const currentTitle = {
+        popular: 'Popular',
+        top_rated: 'Top Rated',
+        now_playing: 'Now Playing',
+    }
 
     return (
         <>
             <header className='flex px-5'>
-                <h3>Popular <img src={Fire} className='w-4 pb-1  inline mr-4' alt="" /></h3>
+                <h3>{currentTitle[linkname]}</h3>
                 <div className='ms-auto flex select-none'>
                     <ul className='flex flex-row '>
                         <li className={`pr-2 cursor-pointer ${rating === 8 && 'underline'}`} onClick={() => handleRating(8)}>8+ Star</li>
