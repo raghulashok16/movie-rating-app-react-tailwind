@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import _ from 'lodash';
 import Fire from "../assets/fire.svg";
 
 import MovieCard from './MovieCard';
@@ -7,8 +8,20 @@ const MovieList = () => {
     const [movies, setMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
     const [rating, setRating] = useState(0);
-
+    const [sort, useSort] = useState({
+        by: 'default',
+        order: 'asc',
+    })
+    console.log(sort);
     useEffect(() => { fetchMovies() }, []);
+    useEffect(() => {
+        if (sort.by != 'default') {
+            const sortedMovie = _.orderBy(filteredMovies, [sort.by], [sort.order]);
+            setFilteredMovies(sortedMovie);
+        } else {
+            setFilteredMovies(movies);
+        }
+    }, [sort]);
 
     const fetchMovies = async () => {
         const response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=c7548debf7c3c70ef38c0a1041ef40c5');
@@ -26,7 +39,11 @@ const MovieList = () => {
             setFilteredMovies(movies);
             setRating(0);
         }
+    }
 
+    const handleSort = (e) => {
+        const { name, value } = e.target;
+        useSort(pre => ({ ...pre, [name]: value }));
     }
 
     return (
@@ -39,14 +56,14 @@ const MovieList = () => {
                         <li className={`pr-2 cursor-pointer ${rating === 7 && 'underline'}`} onClick={() => handleRating(7)}>7+ Star</li>
                         <li className={`pr-2 cursor-pointer ${rating === 6 && 'underline'}`} onClick={() => handleRating(6)}>6+ Star</li>
                     </ul>
-                    <select name="SortBy" id="" className='pr-2  bg-black'>
-                        <option value="">SortBy</option>
-                        <option value="">Date</option>
-                        <option value="">Rating</option>
+                    <select name="by" id="" className='mr-1  bg-black' onChange={handleSort} value={sort.by}>
+                        <option value="default">SortBy</option>
+                        <option value="release_date">Date</option>
+                        <option value="vote_average">Rating</option>
                     </select>
-                    <select name="" id="" className='pl-2 bg-black'>
-                        <option value="">Ascending</option>
-                        <option value="">Descending</option>
+                    <select name="order" id="" className=' bg-black' onChange={handleSort} value={sort.order}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
                     </select>
                 </div>
             </header>
