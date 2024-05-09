@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import _ from 'lodash';
 import Fire from "../assets/fire.svg";
+import Spinner from "../assets/spinner.svg";
 
 import MovieCard from './MovieCard';
 const MovieList = ({ linkname }) => {
@@ -11,6 +12,7 @@ const MovieList = ({ linkname }) => {
         by: 'default',
         order: 'asc',
     });
+    const [errors, setErrors] = useState('');
 
     useEffect(() => { fetchMovies() }, [linkname]);
     useEffect(() => {
@@ -23,10 +25,19 @@ const MovieList = ({ linkname }) => {
     }, [sort]);
 
     const fetchMovies = async () => {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${linkname}?api_key=c7548debf7c3c70ef38c0a1041ef40c5`);
-        const data = await response.json();
-        setMovies(data.results);
-        setFilteredMovies(data.results);
+        try {
+            const response = await fetch(`https://api.themoviedb.org/3/movie/${linkname}?api_key=c7548debf7c3c70ef38c0a1041ef40c5`);
+            const data = await response.json();
+            setMovies(data.results);
+            setFilteredMovies(data.results);
+        } catch (error) {
+            setErrors(error.name);
+        }
+        // const response = await fetch(`https://api.themoviedb.org/3/movie/${linkname}?api_key=c7548debf7c3c70ef38c0a1041ef40c5`);
+        // console.log(response);
+        // const data = await response.json();
+        // setMovies(data.results);
+        // setFilteredMovies(data.results);
     };
 
     const handleRating = (rate) => {
@@ -73,7 +84,13 @@ const MovieList = ({ linkname }) => {
             </header>
             <div className='flex justify-evenly flex-wrap mt-9'>
                 {
-                    filteredMovies.map(movie => (<MovieCard key={movie.id} movie={movie} />))
+                    filteredMovies.length >= 1 ?
+                        filteredMovies.map(movie => (<MovieCard key={movie.id} movie={movie} />)) :
+                        (
+                            errors === '' ?
+                                (<img src={Spinner} className='w-7 mt-[5rem] animate-spin' alt="" />) :
+                                (<p className='text-white text-xl text-center mt-[5rem]'>API LINK NOT WORKING TRY AFTER SOMETIME...</p>)
+                        )
                 }
             </div>
         </>
